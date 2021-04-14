@@ -1,3 +1,6 @@
 # VS Code support files
 .vscode
 
+# macOS DS Store
+.DS_Store
+
