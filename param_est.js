@@ -31,6 +31,7 @@ function calc_linLSQ_line(data) {
   //(For this homework x is a vector, but generally speaking it may not be!)
 
   //Setup matrices/vectors for calculation
+  // b = A p
   let A=numeric.rep([N,2],0); //Make an empty (all zero) Nx2 matrix
   let b=numeric.rep([N],0); //Make an empty N element vector
   for(let i=0;i<N;++i) {
@@ -42,8 +43,8 @@ function calc_linLSQ_line(data) {
     * Hint: BE CAREFUL of the order, what do the columns of A refer and relate to?
     ***********************/
 
-    A[i][0] = x[i];
-    A[i][1] = 1;
+    A[i][0] = 1;
+    A[i][1] = x[i];
     b[i] = y[i];
   }
 
@@ -57,7 +58,7 @@ function calc_linLSQ_line(data) {
   let secondMatrix = numeric.dot(numeric.transpose(A), b)
   let p = numeric.dot(firstMatrix, secondMatrix);
   
-  let sse=0;
+  var sse = 0;
   for(let i=0;i<N;++i) {
     let model_out=eval_line_func(x[i],p); //The output of the model function on data point i using
                                           //parameters p
@@ -65,6 +66,7 @@ function calc_linLSQ_line(data) {
     /***********************
     * TASK: Calculate the sum of squared error
     ***********************/
+    sse += Math.pow(y[i] - model_out, 2)
   }
   helper_log_write("SSE="+sse);
     
