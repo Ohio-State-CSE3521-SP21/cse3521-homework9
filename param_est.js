@@ -154,6 +154,13 @@ function calc_jacobian(data,p) {
     //J[i][2]=??;
     //J[i][1]=??;
     //J[i][0]=??;
+    J[i][3]=Math.pow(x[i], p[2]);
+    // ax^blog(x)
+    J[i][2]=p[3] * Math.pow(x[i], p[2]) * Math.log(x[i]);
+    // x
+    J[i][1]=x[i];
+    // 1
+    J[i][0]=1;
   }
   
   return J;
@@ -184,6 +191,7 @@ function calc_nonlinLSQ_gaussnewton(data,initial_p,max_iterations) {
       *   our non-linear function
       */
       //dy[i]=??;
+      dy[i] = y[i] - eval_nonlin_func(x[i], p)
     }
     
     let sse=0;
@@ -193,6 +201,11 @@ function calc_nonlinLSQ_gaussnewton(data,initial_p,max_iterations) {
     * Hint: Reuse/modify your code from previous problems.
     * Hint 2: Consider, perhaps you have already calculated part of what SSE needs?
     */
+    for (var i = 0 ; i < N; i++) {
+      let model_out = eval_nonlin_func(x[i], p)
+
+      sse += Math.pow(y[i] - model_out, 2)
+    }
     helper_log_write("Iteration "+iter+": SSE="+sse);
     if(iter==max_iterations) break; //Only calculate SSE at end
 
@@ -209,6 +222,10 @@ function calc_nonlinLSQ_gaussnewton(data,initial_p,max_iterations) {
     *   can alter/reuse some of your previous code?
     */
     //let dp=??;
+    let firstMatrix = numeric.inv(numeric.dot(numeric.transpose(J), J))
+    let secondMatrix = numeric.transpose(J)
+    let thirdMatrix = numeric.dot(firstMatrix, secondMatrix)
+    let dp = numeric.dot(thirdMatrix, dy)
     
     //Step 4: Make new guess
     /***********************
@@ -217,6 +234,7 @@ function calc_nonlinLSQ_gaussnewton(data,initial_p,max_iterations) {
     * Slide 10, of course
     */
     //p=??;
+    p = numeric.add(p, dp)
   }
   return p;
 }
