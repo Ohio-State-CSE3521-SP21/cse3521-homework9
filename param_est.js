@@ -154,13 +154,13 @@ function calc_jacobian(data,p) {
     //J[i][2]=??;
     //J[i][1]=??;
     //J[i][0]=??;
-    J[i][3]=Math.pow(x[i], p[2]);
+    J[i][3] = Math.pow(x[i], p[2]);
     // ax^blog(x)
-    J[i][2]=p[3] * Math.pow(x[i], p[2]) * Math.log(x[i]);
+    J[i][2] = p[3] * J[i][3] * Math.log(x[i]);
     // x
-    J[i][1]=x[i];
+    J[i][1] = x[i];
     // 1
-    J[i][0]=1;
+    J[i][0] = 1;
   }
   
   return J;
@@ -263,6 +263,11 @@ function calc_nonlinLSQ_gradientdescent(data,initial_p,max_iterations,learning_r
     *
     * Hint: Reuse/modify your code from previous problems
     */
+    for (var i = 0 ; i < N; i++) {
+      let model_out = eval_nonlin_func(x[i], p)
+
+      sse += Math.pow(y[i] - model_out, 2)
+    }
     helper_log_write("Iteration "+iter+": SSE="+sse);
     if(iter==max_iterations) break; //Only calculate SSE at end
 
@@ -274,7 +279,21 @@ function calc_nonlinLSQ_gradientdescent(data,initial_p,max_iterations,learning_r
     *
     * Hint: You should be able to reuse some code here!
     */
-    //let grad=??;
+   for(let i=0;i<N;++i) {
+    /***********************
+    * TASK: Calculate the error for each data point (actual error, NOT linearized!)
+    *
+    * Refer to slide 10
+    *
+    * Hint: You may use the provided function eval_nonlin_func(x,p) to evaluate
+    *   our non-linear function
+    */
+    //dy[i]=??;
+    dy[i] = y[i] - eval_nonlin_func(x[i], p)
+   }
+
+   let J=calc_jacobian(data,p);
+   let grad = numeric.mul(numeric.dot(numeric.transpose(J), dy), -2)
 
     //Step 2: Update parameters
     /***********************
@@ -283,6 +302,8 @@ function calc_nonlinLSQ_gradientdescent(data,initial_p,max_iterations,learning_r
     * See slide 23.
     */
     //p=??;
+    // p = p - a * delta(E) P
+    p = numeric.sub(p, numeric.dot(learning_rate, grad))
   }
   return p;
 }
