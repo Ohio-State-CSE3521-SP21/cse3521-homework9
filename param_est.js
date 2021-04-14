@@ -95,11 +95,10 @@ function calc_linLSQ_poly(data,order) {
     * Hint: In the case where order==1, this should give the same result
     *   as your calc_linLSQ_line() function
     ***********************/
-    //A[i][0]=??;
-    //A[i][1]=??;
-    //...
-    //A[i][order]=??;
-    //b[i]=??;
+    b[i] = y[i]
+    for (var j = 0; j <= order; j++) {
+      A[i][j] = Math.pow(x[i], j)
+    }
   }
   
   /***********************
@@ -108,7 +107,28 @@ function calc_linLSQ_poly(data,order) {
   * Re-use the code from your calc_linLSQ_line(), this part should be identical
   *  EXCEPT use instead the provided eval_poly_func(x,p) instead of eval_line_func
   */
+/***********************
+  * TASK: Solve for parameters
+  *
+  * Refer to slides 18-19
+  ***********************/
+  // on slide: p = (A T A)^-1 (A T b)
+  let firstMatrix = numeric.inv(numeric.dot(numeric.transpose(A), A))
+  let secondMatrix = numeric.dot(numeric.transpose(A), b)
+  let p = numeric.dot(firstMatrix, secondMatrix);
+  
+  var sse = 0;
+  for(let i=0;i<N;++i) {
+    let model_out=eval_poly_func(x[i],p); //The output of the model function on data point i using
+                                          //parameters p
 
+    /***********************
+    * TASK: Calculate the sum of squared error
+    ***********************/
+    sse += Math.pow(y[i] - model_out, 2)
+  }
+  helper_log_write("SSE="+sse);
+  
   return p;
 }
 
