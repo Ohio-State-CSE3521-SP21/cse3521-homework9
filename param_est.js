@@ -42,9 +42,9 @@ function calc_linLSQ_line(data) {
     * Hint: BE CAREFUL of the order, what do the columns of A refer and relate to?
     ***********************/
 
-    A[i][0]=??;
-    A[i][1]=??;
-    b[i]=??;
+    A[i][0] = x[i];
+    A[i][1] = 1;
+    b[i] = y[i];
   }
 
   /***********************
@@ -52,7 +52,10 @@ function calc_linLSQ_line(data) {
   *
   * Refer to slides 18-19
   ***********************/
-  let p=??;
+  // on slide: p = (A T A)^-1 (A T b)
+  let firstMatrix = numeric.inv(numeric.dot(numeric.transpose(A), A))
+  let secondMatrix = numeric.dot(numeric.transpose(A), b)
+  let p = numeric.dot(firstMatrix, secondMatrix);
   
   let sse=0;
   for(let i=0;i<N;++i) {
