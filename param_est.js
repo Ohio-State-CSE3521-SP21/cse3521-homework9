@@ -21,6 +21,9 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
+// @author John Choi.1655
+// @author Austin Schall.37
+
 //Perform linear least squares for line equation: y=a*x+b
 //return parameter array p, where p[0]=b and p[1]=a
 function calc_linLSQ_line(data) {
